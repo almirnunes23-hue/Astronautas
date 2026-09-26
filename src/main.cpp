@@ -4,62 +4,464 @@
 
 using namespace std;
 
-// Parte 1: escreva aqui as classes Astronauta, Voo e Agencia.
-// Depois, em cada comando, apague a linha do cout com "TODO" e descomente
-// a chamada ao metodo da Agencia.
+class Astronauta{
+private:
+ 
+    string cpf;
+    string nome;
+    int idade;
+    bool vivo;
+    bool disponivel;
+
+public:
+
+    Astronauta(string c, string n, int i){
+
+        cpf = c;
+        nome = n;
+        idade = i;
+        vivo = true;
+        disponivel = true;
+    }    
+
+    string getCpf(){
+        return cpf;
+    }
+    string getNome(){
+        return nome;
+    }
+
+    int getIdade(){
+        return idade;
+    }
+    bool estaVivo(){
+        return vivo;
+    }
+    bool estaDisponivel(){
+        return disponivel;
+    }
+    void embarcar(){
+        disponivel = false;
+    }   
+    void desembarcar(){
+        disponivel = true;
+    }  
+    void morrer(){
+        vivo = false;
+        disponivel = false;
+    }
+};
+
+
+class Voo{
+private:
+
+    int codigo;
+    string estado;
+    vector<string> cpfs;
+
+public:
+
+    Voo(int c){
+        codigo = c;
+        estado = "planejado";
+    }
+
+    int getCodigo(){
+        return codigo;
+    }
+    string getEstado(){
+        return estado;
+    }
+    int getQuantidadeAstronautas(){
+        return cpfs.size();
+    }
+    string getCpf(int posicao){
+        return cpfs[posicao];
+    }
+
+    bool temAstronauta(string cpf){
+        
+        for (int i = 0; i < cpfs.size(); i++) {
+            if (cpfs[i] == cpf) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void adicionarAstronauta(string cpf){
+        cpfs.push_back(cpf);
+    }
+
+    bool removerAstronauta(string cpf){
+
+        for (int i = 0; i < cpfs.size(); i++) {
+            if (cpfs[i] == cpf) {
+                cpfs.erase(cpfs.begin() + i);
+                return true;
+            }
+        }
+
+        return false;
+        
+    } 
+
+    void lancar(){
+        estado = "em curso";
+    }
+    void explodir(){
+        estado = "finalizado com explosao";
+    }
+    void finalizar(){
+        estado = "finalizado com sucesso";
+    }
+
+};
+
+
+class Agencia{
+private:
+
+    vector<Astronauta> astronautas;
+    vector<Voo> voos;
+
+    int buscarAstronauta(string cpf){
+        
+        for (int i = 0; i < astronautas.size(); i++) {
+            if (astronautas[i].getCpf() == cpf) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    int buscarVoo(int codigo){
+        for (int i = 0; i < voos.size(); i++) {
+            if (voos[i].getCodigo() == codigo) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+public:
+        
+    void cadastrarAstronauta(string cpf, string nome, int idade){
+        if (buscarAstronauta(cpf) != -1){
+            cout << "ERRO: astronauta com CPF " << cpf << " ja cadastrado" << endl;
+        }
+        else{
+            Astronauta astronauta(cpf, nome, idade);
+            astronautas.push_back(astronauta);
+            cout << "OK: astronauta " << 111 << " cadastrado" << endl;
+        }
+    }
+
+    void cadastrarVoo(int codigo){
+        if (buscarVoo(codigo) != -1){
+            cout << "ERRO: Voo " << codigo << " ja cadastrado" << endl;
+        }
+        else{
+            Voo voo(codigo);
+            voos.push_back(voo);
+            cout << "OK: voo " <<  codigo << " cadastrado" << endl;
+        }
+    }
+
+    void adicionarAstronauta(string cpf, int codigo){
+        int posicaoV = buscarVoo(codigo);
+        int posicaoA = buscarAstronauta(cpf);
+
+        if (buscarAstronauta(cpf) == -1){
+            cout << "ERRO: astronauta " << cpf << " nao cadastrado" << endl;
+        }
+        else if (posicaoV == -1){
+            cout << "ERRO: Voo " << codigo << " nao cadastrado" << endl;
+        }
+        else if(voos[posicaoV].getEstado() != "planejado"){
+            cout << "ERRO: voo " << codigo << " nao esta planejado" << endl;
+        }
+        else if (astronautas[posicaoA].estaVivo() == false){
+            cout << "ERRO: astronauta " << cpf << " esta morto" << endl;
+        }
+        else if (voos[posicaoV].temAstronauta(cpf) == true){
+            cout << "ERRO: astronauta "<< cpf << " ja esta no voo " << codigo << endl;
+        }
+        else{
+            voos[posicaoV].adicionarAstronauta(cpf);
+            cout << "OK: astronauta " << cpf << "adicionado ao voo " << codigo << endl;
+        }
+    }
+
+    void removerAstronauta(string cpf, int codigo){
+        int posicaoV = buscarVoo(codigo);
+
+        if (buscarAstronauta(cpf) == -1){
+            cout << "ERRO: astronauta " << cpf << " nao cadastrado" << endl;
+        }
+        else if (posicaoV == -1){
+            cout << "ERRO: Voo " << codigo << " nao cadastrado" << endl;
+        }
+        else if(voos[posicaoV].getEstado() != "planejado"){
+            cout << "ERRO: voo " << codigo << " nao esta planejado" << endl;
+        }
+        else if (voos[posicaoV].temAstronauta(cpf) == false){
+            cout << "ERRO: astronauta "<< cpf << " nao esta no voo " << codigo << endl;
+        }
+        else{
+            voos[posicaoV].removerAstronauta(cpf);
+            cout << "OK: astronauta " << cpf << "removido do voo " << codigo << endl;
+        }
+    }
+
+    void lancarVoo(int codigo){
+        int posicao = buscarVoo(codigo);
+
+        if (posicao == -1){
+            cout << "ERRO: Voo " << codigo << " nao cadastrado" << endl;
+        }
+        else if(voos[posicao].getEstado() != "planejado"){
+            cout << "ERRO: voo " << codigo << " nao esta planejado" << endl;
+        }
+        else if(voos[posicao].getQuantidadeAstronautas() <= 0){
+            cout << "ERRO: voo " << codigo << " nao tem astronautas" << endl;
+        }
+        for (int i = 0; i < voos[posicao].getQuantidadeAstronautas(); i++){
+            string cpf = voos[posicao].getCpf(i);
+            int posicaoA = buscarAstronauta(cpf);
+            
+            if (astronautas[posicaoA].estaDisponivel() == false){
+                cout << "ERRO: astronauta " << cpf << " esta indisponivel" << endl;
+                return;
+            }
+            else if (astronautas[posicaoA].estaVivo() == false){
+                cout << "ERRO: astronauta " << cpf << " esta morto" << endl;
+                return;
+            }
+        }
+        voos[posicao].lancar();
+        cout << "OK: voo " << codigo << " foi lancado" << endl;
+    }
+
+    void explodirVoo(int codigo){
+        int posicao = buscarVoo(codigo);
+
+        if (posicao == -1){
+            cout << "ERRO: Voo " << codigo << " nao cadastrado" << endl;
+        }
+        else if(voos[posicao].getEstado() != "em curso"){
+            cout << "ERRO: voo " << codigo << " nao em curso" << endl;
+        }
+        else{
+            voos[posicao].explodir();
+            cout << "OK: voo " << codigo << " explodiu" << endl;
+        }
+    }
+
+    void finalizarVoo(int codigo){
+        int posicao = buscarVoo(codigo);
+
+        if (posicao == -1){
+            cout << "ERRO: Voo " << codigo << " nao cadastrado" << endl;
+        }
+        else if(voos[posicao].getEstado() != "em curso"){
+            cout << "ERRO: voo " << codigo << " nao em curso" << endl;
+        }
+        else{
+            voos[posicao].finalizar();
+            cout << "OK: voo " << codigo << " finalizado com sucesso" << endl;
+        }
+    }
+
+    void listarVoos(){
+
+        for (int i = 0; i < voos.size(); i++) {
+            if (voos[i].getEstado() == "planejado") {
+                cout << "código do voo: " << voos[i].getCodigo();
+
+                if (voos[i].getQuantidadeAstronautas() == 0) {
+                    cout << " sem astronautas";
+                }
+                else {
+                    for (int j = 0; j < voos[i].getQuantidadeAstronautas(); j++) {
+                        string cpf = voos[i].getCpf(j);
+                        int posicao = buscarAstronauta(cpf);
+
+                        cout << " " << astronautas[posicao].getCpf()
+                            << " " << astronautas[posicao].getNome();
+
+                        if (j < voos[i].getQuantidadeAstronautas() - 1) {
+                            cout << ",";
+                        }
+                    }
+                }
+
+                cout << " estado do voo: planejado" << endl;
+            }
+        }
+
+        for (int i = 0; i < voos.size(); i++) {
+            if (voos[i].getEstado() == "em curso") {
+                cout << "código do voo: " << voos[i].getCodigo();
+
+                if (voos[i].getQuantidadeAstronautas() == 0) {
+                    cout << " sem astronautas";
+                }
+                else {
+                    for (int j = 0; j < voos[i].getQuantidadeAstronautas(); j++) {
+                        string cpf = voos[i].getCpf(j);
+                        int posicao = buscarAstronauta(cpf);
+
+                        cout << " " << astronautas[posicao].getCpf()
+                            << " " << astronautas[posicao].getNome();
+
+                        if (j < voos[i].getQuantidadeAstronautas() - 1) {
+                            cout << ",";
+                        }
+                    }
+                }
+
+                cout << " estado do voo: em curso" << endl;
+            }
+        }
+
+        for (int i = 0; i < voos.size(); i++) {
+            if (voos[i].getEstado() == "finalizado com sucesso") {
+                cout << "código do voo: " << voos[i].getCodigo();
+
+                if (voos[i].getQuantidadeAstronautas() == 0) {
+                    cout << " sem astronautas";
+                }
+                else {
+                    for (int j = 0; j < voos[i].getQuantidadeAstronautas(); j++) {
+                        string cpf = voos[i].getCpf(j);
+                        int posicao = buscarAstronauta(cpf);
+
+                        cout << " " << astronautas[posicao].getCpf()
+                            << " " << astronautas[posicao].getNome();
+
+                        if (j < voos[i].getQuantidadeAstronautas() - 1) {
+                            cout << ",";
+                        }
+                    }
+                }
+
+                cout << " estado do voo: finalizado com sucesso" << endl;
+            }
+        }
+
+        for (int i = 0; i < voos.size(); i++) {
+            if (voos[i].getEstado() == "finalizado com explosao") {
+                cout << "código do voo: " << voos[i].getCodigo();
+
+                if (voos[i].getQuantidadeAstronautas() == 0) {
+                    cout << " sem astronautas";
+                }
+                else {
+                    for (int j = 0; j < voos[i].getQuantidadeAstronautas(); j++) {
+                        string cpf = voos[i].getCpf(j);
+                        int posicao = buscarAstronauta(cpf);
+
+                        cout << " " << astronautas[posicao].getCpf()
+                            << " " << astronautas[posicao].getNome();
+
+                        if (j < voos[i].getQuantidadeAstronautas() - 1) {
+                            cout << ",";
+                        }
+                    }
+                }
+
+                cout << " estado do voo: finalizado com explosao" << endl;
+            }
+        }
+    }
+
+    void listarMortos(){
+        for (int i = 0; i < astronautas.size(); i++){
+            if (astronautas[i].estaVivo() == false){
+                cout << astronautas[i].getNome() << " - voos: ";
+                string cpf = astronautas[i].getCpf();
+                
+                for (int j = 0; j < voos.size(); j++){
+                    for (int k = 0; k < voos[j].getQuantidadeAstronautas(); k++){
+                        if (voos[j].getCpf(k) == cpf){
+                            cout << voos[j].getCodigo();
+                        }
+
+                    }
+                }
+
+            }
+            cout << endl; 
+        }
+    }
+
+    };
 
 int main() {
-    // TODO: criar a Agencia aqui, por exemplo:  Agencia agencia;
+    Agencia agencia;
     string comando;
 
-    while (cin >> comando) {   // le uma palavra; para no FIM ou quando a entrada acaba
+    while (cin >> comando) {   
+
         if (comando == "FIM") {
             break;
+
         } else if (comando == "CADASTRAR_ASTRONAUTA") {
             string cpf, nome;
             int idade;
+
             cin >> cpf >> idade;
-            getline(cin >> ws, nome);   // o nome vem por ultimo e pode ter espacos
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.cadastrarAstronauta(cpf, nome, idade);
+            getline(cin >> ws, nome);  
+            
+            agencia.cadastrarAstronauta(cpf, nome, idade);
+
         } else if (comando == "CADASTRAR_VOO") {
             int codigo;
             cin >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.cadastrarVoo(codigo);
+
+            agencia.cadastrarVoo(codigo);
+            
         } else if (comando == "ADICIONAR_ASTRONAUTA") {
             string cpf;
             int codigo;
             cin >> cpf >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.adicionarAstronauta(cpf, codigo);
+
+            agencia.adicionarAstronauta(cpf, codigo);
+            
         } else if (comando == "REMOVER_ASTRONAUTA") {
             string cpf;
             int codigo;
             cin >> cpf >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.removerAstronauta(cpf, codigo);
+
+            agencia.removerAstronauta(cpf, codigo);
+
         } else if (comando == "LANCAR_VOO") {
             int codigo;
             cin >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.lancarVoo(codigo);
+
+            agencia.lancarVoo(codigo);
+            
         } else if (comando == "EXPLODIR_VOO") {
             int codigo;
             cin >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.explodirVoo(codigo);
+
+            agencia.explodirVoo(codigo);
+            
         } else if (comando == "FINALIZAR_VOO") {
             int codigo;
             cin >> codigo;
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.finalizarVoo(codigo);
+
+            agencia.finalizarVoo(codigo);
+           
         } else if (comando == "LISTAR_VOOS") {
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.listarVoos();
+            agencia.listarVoos();
+            
         } else if (comando == "LISTAR_MORTOS") {
-            cout << "TODO " << comando << endl;
-            // TODO: agencia.listarMortos();
+            agencia.listarMortos();
+            
         } else {
             cout << "ERRO: comando desconhecido " << comando << endl;
         }

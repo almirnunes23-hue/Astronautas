@@ -1,23 +1,23 @@
-# Diário da atividade
+# Diário da Atividade
 
-Escreva com as suas palavras. Frases curtas bastam. Não cole a conversa inteira
-com a IA. Cole só os pedidos que você enviou.
+Este diário serve para registrar o meu progresso passo a passo na atividade 'ASTRONAUTAS' 
 
 ## Ambiente
 
 - Versão do OpenCode (`opencode --version`):
 - Modelo usado:
 
-## Parte 1: antes de programar
+## antes de programar
 
-- O que cada classe guarda:
-- O que acontece em `LANCAR_VOO`, em palavras:
-- Uma dúvida que eu tinha antes de começar:
+- O que cada classe guarda: As classes 'Voo' e 'Astronautas' guardam as ações que efetivamente serão tomadas e o registro relacionado
+aos voos e aos astronautas. Já a classe 'Agencia', manipula os métodos e objetos das duas classes anteriores.
+- O que acontece em `LANCAR_VOO`, em palavras: Esse método altera o estado de um voo registrado.
+- Uma dúvida que eu tinha antes de começar: A funcionalidade da Classe 'Agencia'.
 
-## Parte 1: uso de IA para entender algo
+## uso de IA para entender algo
 
-- O que perguntei (ou "não usei"):
-- O que aprendi:
+- O que perguntei (ou "não usei"): Coisas relacionadas ao léxico da língua e ao funcionamento do Vector.
+- O que aprendi: Comandos específicos de C++.
 
 ## Primeiro contato: revisão sem editar
 
