@@ -4,8 +4,8 @@ Este diário serve para registrar o meu progresso passo a passo na atividade 'AS
 
 ## Ambiente
 
-- Versão do OpenCode (`opencode --version`):
-- Modelo usado:
+- Versão do OpenCode (`opencode --version`): V2
+- Modelo usado: LongCat 2.5
 
 ## antes de programar
 
@@ -22,9 +22,12 @@ aos voos e aos astronautas. Já a classe 'Agencia', manipula os métodos e objet
 ## Primeiro contato: revisão sem editar
 
 - As três melhorias que a IA sugeriu, em uma linha cada:
-- A que escolhi e por quê:
-- O que mudou no código, e se os seis testes continuaram passando:
-- O que entendi que não sabia antes:
+      1. Criar a função 'ImprimirVoo' para auxiliar a função 'listarvoo'.
+      2. Adicionar const aos métodos que não modificam o objeto como 'getCpf()', 'getNome()', 'estaVivo()'.
+      3. Usar const string& nos parâmetros.
+- A que escolhi e por quê: Escolhi a primeira sugestão como forma de harmonizar e deixar mais entendível o código.
+- O que mudou no código, e se os seis testes continuaram passando: A função auxiliar ajuda a diminuir o tamanho da função 'listarvoo'.
+- O que entendi que não sabia antes: A aplicação de contantes.
 
 ## Missão 1: LISTAR_ASTRONAUTAS e HISTORICO
 
